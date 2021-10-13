@@ -5,7 +5,7 @@
 
     <groupId>io.springfox</groupId>
     <artifactId>springfox-javadoc</artifactId>
-    <version>0.9.4-SNAPSHOT</version>
+    <version>0.9.5</version>
     <url> https://github.com/springfox/springfox-javadoc</url>
     <name>springfox-javadoc</name>
     <description>generate Swagger/OpenAPI documentation from Javadoc using Springfox</description>
@@ -77,8 +77,8 @@
     </licenses>
 
     <properties>
-        <java.source.version>1.6</java.source.version>
-        <java.target.version>1.6</java.target.version>
+        <java.source.version>1.8</java.source.version>
+        <java.target.version>1.8</java.target.version>
         <org.springframework.version>4.3.9.RELEASE</org.springframework.version>
         <springfox.version>3.0.0</springfox.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -126,7 +126,7 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.12</version>
+            <version>4.13.1</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
