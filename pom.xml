@@ -77,10 +77,10 @@
     </licenses>
 
     <properties>
-        <java.source.version>1.8</java.source.version>
-        <java.target.version>1.8</java.target.version>
-        <org.springframework.version>4.3.9.RELEASE</org.springframework.version>
-        <springfox.version>2.9.2</springfox.version>
+        <java.source.version>11</java.source.version>
+        <java.target.version>11</java.target.version>
+        <org.springframework.version>5.3.10</org.springframework.version>
+        <springfox.version>3.0.0</springfox.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
@@ -114,19 +114,19 @@
         </dependency>
 
         <!-- necessary to compile our own Doclet that we use to generate Swagger documentation from JavaDoc -->
-        <dependency>
+<!--        <dependency>
             <groupId>com.sun</groupId>
             <artifactId>tools</artifactId>
             <version>${java.source.version}</version>
             <scope>system</scope>
             <systemPath>${java.home}/../lib/tools.jar</systemPath>
-        </dependency>
+        </dependency>-->
 
         <!-- JUnit -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.12</version>
+            <version>4.13.2</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -164,7 +164,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
-                <version>3.0.0</version>
+                <version>3.1.2</version>
                 <executions>
                     <execution>
                         <id>validate</id>
@@ -181,6 +181,13 @@
                         </goals>
                     </execution>
                 </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>com.puppycrawl.tools</groupId>
+                        <artifactId>checkstyle</artifactId>
+                        <version>8.44</version>
+                    </dependency>
+                </dependencies>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -208,7 +215,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
-                <version>3.0.0</version>
+                <version>3.1.2</version>
                 <reportSets>
                     <reportSet>
                         <reports>

@@ -18,10 +18,6 @@
  */
 package springfox.javadoc.plugin;
 
-import com.google.common.annotations.VisibleForTesting;
-import com.google.common.base.Optional;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
@@ -41,6 +37,7 @@ import springfox.javadoc.doclet.SwaggerPropertiesDoclet;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -51,15 +48,18 @@ import java.util.Set;
  * @author MartinNeumannBeTSE
  */
 @Component
-@Order(Ordered.LOWEST_PRECEDENCE)
+@Order()
 public class JavadocBuilderPlugin implements OperationBuilderPlugin, ParameterBuilderPlugin {
 
     private static final String PERIOD = ".";
     private static final String API_PARAM = "io.swagger.annotations.ApiParam";
     private static final String REQUEST_PARAM = "org.springframework.web.bind.annotation.RequestParam";
     private static final String PATH_VARIABLE = "org.springframework.web.bind.annotation.PathVariable";
-    @Autowired
-    private Environment environment;
+    private final Environment environment;
+
+    public JavadocBuilderPlugin(Environment environment) {
+        this.environment = environment;
+    }
 
     private static Annotation annotationFromField(ParameterContext context, String annotationType) {
 
@@ -135,12 +135,10 @@ public class JavadocBuilderPlugin implements OperationBuilderPlugin, ParameterBu
         }
     }
 
-    @VisibleForTesting
     String extractApiParamDescription(Annotation annotation) {
         return annotation != null ? annotation.annotationType().getName() : null;
     }
 
-    @VisibleForTesting
     Optional<Boolean> isParamRequired(Annotation apiParam, ParameterContext context) {
         if (apiParam != null) {
             Optional<Boolean> required = isRequired(apiParam, context);
@@ -152,30 +150,28 @@ public class JavadocBuilderPlugin implements OperationBuilderPlugin, ParameterBu
         if (annotation == null) {
             annotation = annotationFromField(context, PATH_VARIABLE);
         }
-        return annotation != null ? isRequired(annotation, context) : Optional.<Boolean>absent();
+        return annotation != null ? isRequired(annotation, context) : Optional.empty();
     }
 
-    @VisibleForTesting
     Optional<Boolean> isRequired(Annotation annotation, ParameterContext context) {
         for (Method method : annotation.annotationType().getDeclaredMethods()) {
             if (method.getName().equals("required")) {
                 try {
                     return Optional.of((Boolean) method.invoke(annotation, (Object) null));
                 } catch (Exception ex) {
-                    return Optional.absent();
+                    return Optional.empty();
                 }
             }
         }
-        return Optional.absent();
+        return Optional.empty();
     }
 
-    @VisibleForTesting
     boolean hasValue(Annotation annotation, ParameterContext context) {
         for (Method method : annotation.annotationType().getDeclaredMethods()) {
             if (method.getName().equals("value")) {
                 try {
-                    Optional<String> value = Optional.of((String) method.invoke(annotation, (Object) null));
-                    return value.isPresent();
+                    Object val = method.invoke(annotation, (Object) null);
+                    return val instanceof String;
                 } catch (Exception ex) {
                     return false;
                 }
