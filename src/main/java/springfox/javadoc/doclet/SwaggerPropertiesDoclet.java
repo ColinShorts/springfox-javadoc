@@ -349,10 +349,24 @@ public class SwaggerPropertiesDoclet {
       Properties properties,
       String key,
       String value) {
+        StringBuilder builder = new StringBuilder(value.length());
+        int index = value.indexOf("<pre>");
+        int lastIndex = 0;
+        while (index != -1) {
+            int closeIndex = value.indexOf("</pre>", index);
+            if (closeIndex == -1) {
+                break;
+            }
+            builder.append(value.substring(lastIndex, index).replaceAll(NEWLINE, EMPTY))
+              .append(value, index, closeIndex)
+              .append("</pre>");
+            lastIndex = closeIndex + 6;
+            index = value.indexOf("<pre>", lastIndex);
+        }
+        builder.append(value.substring(lastIndex).replaceAll(NEWLINE, EMPTY));
 
-        value = value.replaceAll(NEWLINE, EMPTY);
-        if (value.length() > 0) {
-            properties.setProperty(key, value);
+        if (builder.length() > 0) {
+            properties.setProperty(key, builder.toString());
         }
     }
 }
